@@ -26,7 +26,7 @@ module.exports = {
       colors: {
       },
       fontFamily: {
-        frutiger: ["Frutiger", "sans-serif"]
+        poppins: ["Poppins", "sans-serif"]
       },
     },
   },
