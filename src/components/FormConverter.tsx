@@ -8,12 +8,13 @@ const FormConverter = (props: any) => {
 	const {colorHex, setColorHex, rgbR, setRgbR, rgbG, setRgbG, rgbB, setRgbB} = props
 	const [textColor, setTextColor] = useState(colorHex === "000000" ? "white": "black")
     const [bgColor, setBgColor] = useState(colorHex || "")
+    const [isCopied, setIsCopied] = useState("")
 
     const checkRatio = (color: string) => {
         const success = (result: any) => {
-            if (result.AA === "fail") {
+            if (result.AAA === "fail") {
                 setTextColor("white")
-            } else if (result.AA === "pass") {
+            } else if (result.AAA === "pass") {
                 setTextColor("black")
             }
         }
@@ -59,20 +60,31 @@ const FormConverter = (props: any) => {
         setBgColor(hex)
 	}
 
+    const copyValue = (e:any, value: string) => {
+        e.preventDefault()
+        navigator.clipboard.writeText(value)
+        setIsCopied(value)
+        setTimeout(() => {
+            setIsCopied("")
+        }, 2000);
+    }
+
     const inputStyle = {borderBottom: textColor === "black" ? "1px solid black" : "1px solid white", color: textColor === "black" ? "black" : "white"}
 
 	return (
-        <div style={{background: "#" + bgColor, color: textColor, height: "100%"}}>
-            <div tw="h-full w-full flex justify-center items-center">
+        <div className="container-background" style={{backgroundColor: "#" + bgColor, color: textColor}}>
+            <div tw="h-full flex justify-center items-center px-10">
                 <form>
                     <div>
-                        #<input type="text" value={colorHex} onChange={onHexchange} tw="uppercase" style={inputStyle} />
+                        #<input type="text" className="input-hex" value={colorHex} onChange={onHexchange} tw="uppercase" style={inputStyle} /> 
+                        <button className="button-copy" onClick={e => copyValue(e, "#" + colorHex)}>{isCopied === "#" + colorHex ? "copied!" : "copy"}</button>
                         <br />
                         rgb(
-                            <input type="number" value={rgbR} id="rgbR" onChange={onRgbChange} style={inputStyle} />,
-                            <input type="number" value={rgbG} id="rgbG" onChange={onRgbChange} style={inputStyle} />,
-                            <input type="number" value={rgbB} id="rgbB" onChange={onRgbChange} style={inputStyle} />
+                            <input type="number" className="input-rgb" value={rgbR} id="rgbR" onChange={onRgbChange} style={inputStyle} />,
+                            <input type="number" className="input-rgb" value={rgbG} id="rgbG" onChange={onRgbChange} style={inputStyle} />,
+                            <input type="number" className="input-rgb" value={rgbB} id="rgbB" onChange={onRgbChange} style={inputStyle} />
                         )
+                        <button className="button-copy" onClick={e => copyValue(e, `rgb(${rgbR}, ${rgbG}, ${rgbB})`)}>{isCopied === `rgb(${rgbR}, ${rgbG}, ${rgbB})` ? "copied!" : "copy"}</button>
                     </div>
                 </form>
             </div>
